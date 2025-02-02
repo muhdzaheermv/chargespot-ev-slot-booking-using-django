@@ -103,10 +103,10 @@
                             <h3 class="featured__price">Speed :{{ i.speed }}</h3>
                             <h3 class="featured__price">Status :{{ i.status }}</h3>
 
+                            <button class="btn btn-primary mb-2"><a href="/slot_availability" class="text-white">Check Availability</a></button>
                             <form method="post" action="/payment/{{ i.id }}">
                                 {% csrf_token %}
-
-                                <button class="btn btn-primary mb-2"><a href="/slot_availability" class="text-white">Check Availability</a></button>
+                                
                                 <div class="input-group mb-3">
                                     <input type="text" name="time" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default" placeholder="DD/MM/YY 24 hours format">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br>
                                 </div>

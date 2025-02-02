@@ -255,48 +255,8 @@ def payment(request,id):
  
 @csrf_exempt
 def paymenthandler(request):
+    return render(request,'home.html')
  
-    # only accept POST request.
-    if request.method == "POST":
-        try:
-           
-            # get the required parameters from post request.
-            payment_id = request.POST.get('razorpay_payment_id', '')
-            razorpay_order_id = request.POST.get('razorpay_order_id', '')
-            signature = request.POST.get('razorpay_signature', '')
-            params_dict = {
-                'razorpay_order_id': razorpay_order_id,
-                'razorpay_payment_id': payment_id,
-                'razorpay_signature': signature
-            }
- 
-            # verify the payment signature.
-            result = razorpay_client.utility.verify_payment_signature(
-                params_dict)
-            if result is not None:
-                amount = 20000  # Rs. 200
-                try:
- 
-                    # capture the payemt
-                    razorpay_client.payment.capture(payment_id, amount)
- 
-                    # render success page on successful caputre of payment
-                    return render(request, 'index.html')
-                except:
- 
-                    # if there is an error while capturing payment.
-                    return render(request, 'index.html')
-            else:
- 
-                # if signature verification fails.
-                return render(request, 'index.html')
-        except:
- 
-            # if we don't find the required parameters in POST data
-            return HttpResponseBadRequest()
-    else:
-       # if other than POST request is made.
-        return HttpResponseBadRequest()
 
 
 # service  payment view
@@ -357,7 +317,7 @@ def payments(request,id):
  
     # order id of newly created order.
     razorpay_order_id = razorpay_order['id']
-    callback_url = 'paymenthandler/'
+    callback_url = 'paymenthandlers/'
  
     # we need to pass these details to frontend.
     context = {}
@@ -369,41 +329,9 @@ def payments(request,id):
  
     return render(request, 'payments.html', context=context)
 
-
-
-# admin views
-
-def admin_home(request):
-    return render(request,'admin_home.html')
-
-def admin_reg(request):
-   if request.method =='POST':
-      uname = request.POST.get('runame')
-      passw = request.POST.get('rpass')
-      super_user(username=uname,password=passw).save()
-      return render(request,'admin_login.html')
-   else:
-      return render(request,'admin_reg.html')
-
-
-def admin_login(request):
-   if request.method=='POST':
-      uname = request.POST.get('runame')
-      passw = request.POST.get('rpass')
-      print(uname)
-      print(passw)
-      cr = super_user.objects.filter(username=uname,password=passw)
-      if cr:
-         details = super_user.objects.get(username=uname, password = passw)
-         username = details.username
-         request.session['cs']=username
-
-         return render(request,'admin_home.html')
-      else:
-         message="Invalid Username Or Password"
-         return render(request,'admin_login.html',{'me':message})
-   else: 
-      return render(request,'admin_login.html')
+@csrf_exempt
+def paymenthandlers(request):
+    return render(request,'home.html')
 
 # booking views
 
@@ -428,29 +356,13 @@ def slot_availability(request):
 
 
 
-# users list view
-
-def users_list(request):
-    data=reg.objects.all()
-    return render(request,'users_list.html',{'data':data})
-
-
-def delete_record1(request,id):
-    data=reg.objects.get(id=id)
-    data.delete()
-    return render(request,'admin_home.html')
-
-
-
-def stations_list(request):
-    data=station.objects.all()
-    return render(request,'stations_list.html',{'data':data})
+# use
 
 
 def delete_record2(request,id):
     data=station.objects.get(id=id)
     data.delete()
-    return render(request,'admin_home.html')
+    return render(request,'ser_home.html')
 
 
 def services_list(request):
@@ -463,9 +375,6 @@ def delete_record3(request,id):
     data.delete()
     return render(request,'admin_home.html')
 
-def feedback_list(request):
-    data=feed.objects.all()
-    return render(request,'feedback_list.html',{'data':data})
 
 
 def delete_record4(request,id):
@@ -474,14 +383,16 @@ def delete_record4(request,id):
     return render(request,'admin_home.html')
 
 def payment_list(request):
-    data=pay.objects.all()
+    c = request.session.get('cs')
+    data = pay.objects.filter(fullname=c)
     return render(request,'payments_list.html',{'data':data})
 
 
 def delete_record5(request,id):
     data=pay.objects.get(id=id)
     data.delete()
-    return render(request,'admin_home.html')
+    return render(request,'home.html')
+
 
 
 def view_stations(request):

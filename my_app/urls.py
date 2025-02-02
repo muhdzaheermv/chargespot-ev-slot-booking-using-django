@@ -45,10 +45,10 @@ urlpatterns = [
    path('payment/<int:id>',views.payment,name='payment'),
    path('payments/<int:id>',views.payments,name='payments'),
    path('paymenthandler/', views.paymenthandler, name='paymenthandler'),
+   path('payment/paymenthandler/', views.paymenthandler, name='paymenthandler'),
+   path('paymenthandlers/', views.paymenthandlers, name='paymenthandlers'),
+   path('payments/paymenthandlers/', views.paymenthandlers, name='paymenthandlers'),
    
-   path('admin_home/',views.admin_home,name='admin_home'),
-   path('admin_reg/',views.admin_reg,name='admin_reg'),
-   path('admin_login/',views.admin_login,name='admin_login'),
    
    path('bookings/',views.bookings,name='bookings'),
    path('orders/',views.orders,name='orders'),
@@ -57,19 +57,7 @@ urlpatterns = [
    path('stations_search/',views.stations_search,name='search'),
    path('services_search/',views.services_search,name='search'),
 
-   path('users_list/',views.users_list,name='uers_list'),
-   path('delete_record1/<int:id>',views.delete_record1,name="delete_record1"),
-
-   path('stations_list/',views.stations_list,name='stations_list'),
-   path('delete_record2/<int:id>',views.delete_record2,name="delete_record2"),
-
-   path('services_list/',views.services_list,name='services_list'),
-   path('delete_record3/<int:id>',views.delete_record3,name="delete_record3"),
-   
-   path('feedback_list/',views.feedback_list,name='feedback_list'),
-   path('delete_record4/<int:id>',views.delete_record4,name="delete_record4"),
-   
-   path('payments_list/',views.payment_list,name='payment_list'),
+   path('payment_list/',views.payment_list,name='payment_list'),
    path('delete_record5/<int:id>',views.delete_record5,name="delete_record5"),
    
    path('view_station/', views.view_stations, name='view_stations'),
@@ -82,3 +70,5 @@ urlpatterns = [
    
     
 ]
+
+#urls
