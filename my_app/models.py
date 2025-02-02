@@ -8,6 +8,9 @@ class reg(models.Model):
     email=models.EmailField()
     username=models.CharField(max_length=20)
     password=models.CharField(max_length=20)
+    
+    def __str__(self):
+            return self.username
 
 class service_reg(models.Model):
     license_no=models.IntegerField()
@@ -18,11 +21,17 @@ class service_reg(models.Model):
     username=models.CharField(max_length=20)
     password=models.CharField(max_length=20)
     
+    def __str__(self):
+        return self.username
+    
 class feed(models.Model):
     fullname=models.CharField(max_length=20)
     phone=models.IntegerField()
     message=models.CharField(max_length=20)
     email=models.EmailField()
+    
+    def __str__(self):
+        return self.fullname
     
 class station(models.Model):
     license_no=models.IntegerField()
@@ -34,6 +43,9 @@ class station(models.Model):
     price=models.CharField(max_length=20)
     status=models.CharField(max_length=20,choices=choice)
     
+    def __str__(self):
+        return self.name
+    
 class service(models.Model):
     license_no=models.IntegerField()
     name=models.CharField(max_length=20)
@@ -42,6 +54,9 @@ class service(models.Model):
     price=models.CharField(max_length=20)
     contact=models.IntegerField()
     status=models.CharField(max_length=20,choices=choice)
+    
+    def __str__(self):
+        return self.name
     
 class pay(models.Model):
     license_no=models.IntegerField()
@@ -53,9 +68,15 @@ class pay(models.Model):
     location=models.CharField(max_length=20)
     amount=models.IntegerField()
     
+    def __str__(self):
+        return self.fullname
+    
 class super_user(models.Model):
     username=models.CharField(max_length=20)
     password=models.CharField(max_length=20)
+    
+    def __str__(self):
+        return self.username
     
 
     
