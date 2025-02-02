@@ -2,7 +2,7 @@ from django.shortcuts import render,redirect
 from . models import reg,service_reg,feed,station,service,pay,super_user
 
 # Create your views here.
-
+import re
 import random
 import smtplib
 import razorpay #import this
@@ -24,17 +24,45 @@ def home(request):
     return render(request,'home.html')
 
 
+# def register(request):
+#    if request.method =='POST':
+#       fname = request.POST.get('rfname')
+#       phone = request.POST.get('rcontact')
+#       email = request.POST.get('remail')
+#       uname = request.POST.get('runame')
+#       passw = request.POST.get('rpass')
+#       reg(fullname=fname,contact=phone,email=email,username=uname,password=passw).save()
+#       return render(request,'login.html')
+#    else:
+#       return render(request,'register.html')
+
 def register(request):
-   if request.method =='POST':
-      fname = request.POST.get('rfname')
-      phone = request.POST.get('rcontact')
-      email = request.POST.get('remail')
-      uname = request.POST.get('runame')
-      passw = request.POST.get('rpass')
-      reg(fullname=fname,contact=phone,email=email,username=uname,password=passw).save()
-      return render(request,'login.html')
-   else:
-      return render(request,'register.html')
+    if request.method == 'POST':
+        fname = request.POST.get('rfname')
+        phone = request.POST.get('rcontact')
+        email = request.POST.get('remail')
+        uname = request.POST.get('runame')
+        passw = request.POST.get('rpass')
+
+        errors = {}
+
+        # Validate full name: No special characters or numbers
+        if not re.match("^[A-Za-z ]+$", fname):
+            errors['fullname'] = "Full name should not contain special characters or numbers."
+
+        # Validate phone number: Only digits and exactly 10 characters
+        if not phone.isdigit() or len(phone) != 10:
+            errors['phone'] = "Phone number must be exactly 10 digits."
+
+        # If there are errors, re-render register.html with error messages
+        if errors:
+            return render(request, 'register.html', {'errors': errors})
+
+        # Save data if validation is successful
+        reg(fullname=fname, contact=phone, email=email, username=uname, password=passw).save()
+        return render(request, 'login.html')
+
+    return render(request, 'register.html')
 
 
 def login(request):

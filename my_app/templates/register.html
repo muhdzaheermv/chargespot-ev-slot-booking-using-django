@@ -11,6 +11,13 @@
 <body>
     
   <div class="container">
+        {% if errors %}
+        <ul>
+            {% for field, error in errors.items %}
+                <li style="color: red;">{{ error }}</li>
+            {% endfor %}
+        </ul>
+    {% endif %}
     <div class="title">USER REGISTRATION</div>
     <div class="content">
       <form action="/register/" method="post">
