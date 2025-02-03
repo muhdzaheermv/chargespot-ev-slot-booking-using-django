@@ -71,4 +71,3 @@ urlpatterns = [
     
 ]
 
-#urls
