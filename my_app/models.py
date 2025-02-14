@@ -69,7 +69,7 @@ class pay(models.Model):
     amount=models.IntegerField()
     
     def __str__(self):
-        return self.fullname
+        return self.name
     
 class super_user(models.Model):
     username=models.CharField(max_length=20)

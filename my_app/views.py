@@ -1,6 +1,7 @@
 from django.shortcuts import render,redirect
 from . models import reg,service_reg,feed,station,service,pay,super_user
 
+
 # Create your views here.
 import re
 import random
@@ -11,8 +12,10 @@ from django.http import JsonResponse #import this
 from django.shortcuts import render
 from django.views.decorators.csrf import csrf_exempt #import this
 from django.http import HttpResponseBadRequest #import this
+from django.core.exceptions import ObjectDoesNotExist
 razorpay_client = razorpay.Client(
     auth=(settings.RAZOR_KEY_ID, settings.RAZOR_KEY_SECRET))
+from django.contrib import messages
 
 
 def index(request):
@@ -36,6 +39,8 @@ def home(request):
 #    else:
 #       return render(request,'register.html')
 
+import re
+
 def register(request):
     if request.method == 'POST':
         fname = request.POST.get('rfname')
@@ -46,23 +51,36 @@ def register(request):
 
         errors = {}
 
-        # Validate full name: No special characters or numbers
-        if not re.match("^[A-Za-z ]+$", fname):
-            errors['fullname'] = "Full name should not contain special characters or numbers."
+        # Validate full name (should not contain numbers or special characters)
+        if not fname.replace(" ", "").isalpha():
+            errors['rfname'] = "Full Name should contain only letters."
 
-        # Validate phone number: Only digits and exactly 10 characters
-        if not phone.isdigit() or len(phone) != 10:
-            errors['phone'] = "Phone number must be exactly 10 digits."
+        # Validate phone number (must be 10-12 digits)
+        if not re.fullmatch(r'\d{10,12}', phone):
+            errors['rcontact'] = "Phone number must be between 10-12 digits."
 
-        # If there are errors, re-render register.html with error messages
+        # Check if phone number already exists
+        if reg.objects.filter(contact=phone).exists():
+            errors['rcontact'] = "This phone number is already registered."
+
+        # Validate email (must contain @ and .com and be lowercase)
+        if not re.fullmatch(r'[a-z0-9]+@[a-z]+\.[a-z]{2,3}', email):
+            errors['remail'] = "Invalid Email format."
+
+        # Check if email already exists
+        if reg.objects.filter(email=email).exists():
+            errors['remail'] = "This email is already registered."
+
+        # Check if username already exists
+        if reg.objects.filter(username=uname).exists():
+            errors['runame'] = "Username already taken"
+
+        # Validate password (minimum 8 characters)
+        if len(passw) < 8:
+            errors['rpass'] = "Password must be at least 8 characters long."
+
         if errors:
-            return render(request, 'register.html', {'errors': errors})
-
-        # Save data if validation is successful
-        reg(fullname=fname, contact=phone, email=email, username=uname, password=passw).save()
-        return render(request, 'login.html')
-
-    return render(request, 'register.html')
+            return render(request, 'register.html', {'errors': errors, 'form_data': request.POST})
 
 
 def login(request):
@@ -245,7 +263,7 @@ def payment(request,id):
 # message to be sent
     number = random.randint(10000,1000000)
     msg = str(number)
-    message = f"Your Slot Booked Successfully , Your Onetime Code Is {msg}"
+    message = f"Your Slot Booked Successfully on Chargespot, Your Onetime Code Is {msg}"
 # sending the mail
     s.sendmail("nefsal003@gmail.com", pmail, message)
  

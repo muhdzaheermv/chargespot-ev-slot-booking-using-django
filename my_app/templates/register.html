@@ -11,13 +11,8 @@
 <body>
     
   <div class="container">
-        {% if errors %}
-        <ul>
-            {% for field, error in errors.items %}
-                <li style="color: red;">{{ error }}</li>
-            {% endfor %}
-        </ul>
-    {% endif %}
+    {% if messages %}
+{% endif %}
     <div class="title">USER REGISTRATION</div>
     <div class="content">
       <form action="/register/" method="post">
@@ -25,23 +20,38 @@
         <div class="user-details">
           <div class="input-box">
             <span class="details">Name</span>
-            <input type="text" name="rfname" placeholder="Enter Your Name" required>
+            <input type="text" value="{% if request.POST.rfname %}{{ request.POST.rfname }}{% endif %}" name="rfname" placeholder="Enter Your Name" required>
+            {% if errors.rfname %}
+            <span class="badge text-bg-danger"><p class="error-message" style="color: red; font-size: 14px;">{{ errors.rfname }}</p></span>
+        {% endif %}
           </div>
           <div class="input-box">
             <span class="details">Phone number</span>
-            <input type="text" name="rcontact" placeholder="Enter Your Phone Number" required>
+            <input type="text" value="{% if request.POST.rcontact %}{{ request.POST.rcontact }}{% endif %}" name="rcontact" placeholder="Enter Your Phone Number" required>
+            {% if errors.rcontact %}
+            <p class="error-message" style="color: red; font-size: 14px;">{{ errors.rcontact }}</p>
+        {% endif %}
           </div>
           <div class="input-box">
             <span class="details">Email</span>
-            <input type="text" name="remail" placeholder="Enter Your Email" required>
+            <input type="text" value="{% if request.POST.remail %}{{ request.POST.remail }}{% endif %}" name="remail" placeholder="Enter Your Email" required>
+            {% if errors.remail %}
+            <p class="error-message" style="color: red; font-size: 14px;">{{ errors.remail }}</p>
+        {% endif %}
           </div>
           <div class="input-box">
             <span class="details">Username</span>
-            <input type="text" name="runame" placeholder="Enter Username" required>
+            <input type="text" value="{% if request.POST.runame %}{{ request.POST.runame }}{% endif %}" name="runame" placeholder="Enter Username" required>
+            {% if errors.runame %}
+            <p class="error-message" style="color: red; font-size: 14px;">{{ errors.runame }}</p>
+        {% endif %}
           </div>
           <div class="input-box">
             <span class="details">Password</span>
             <input type="password" name="rpass" placeholder="Enter Your Password" required>
+            {% if errors.rpass %}
+            <p class="error-message" style="color: red; font-size: 14px;">{{ errors.rpass }}</p>
+        {% endif %}
           </div>
         </div>
         <div class="button">
